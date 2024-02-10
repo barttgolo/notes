@@ -5,14 +5,17 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Notes",
-  description: "Notes app",
+  description: "Notes application with Next 13",
   generator: "Next.js",
-  manifest: "/manifest.webmanifest",
-  authors: [{ name: "@barttgolo" }],
+  manifest: "/manifest.json",
+  keywords: ["nextjs", "nextjs13", "next13", "pwa", "next-pwa"],
   viewport:
-    "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
+  icons: [
+    { rel: "apple-touch-icon", url: "icons/icon-128x128.png" },
+    { rel: "icon", url: "icons/icon-128x128.png" },
+  ],
 };
-
 export default function RootLayout({
   children,
 }: {
