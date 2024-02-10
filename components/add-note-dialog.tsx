@@ -14,12 +14,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { NoteSchema, noteSchema } from "@/utils/form/noteForm";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircle } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export const AddNoteDialog = () => {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const { register, handleSubmit, reset } = useForm<NoteSchema>({
@@ -33,7 +34,11 @@ export const AddNoteDialog = () => {
     <Drawer open={open} onOpenChange={(open) => setOpen(open)}>
       <DrawerTrigger asChild>
         <Button size="icon">
-          <PlusCircle className="h-4 w-4" />
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <PlusCircle className="h-4 w-4" />
+          )}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -46,10 +51,12 @@ export const AddNoteDialog = () => {
         <DrawerFooter>
           <Button
             onClick={handleSubmit(async (data) => {
+              setIsLoading(true);
               setOpen(false);
               reset();
               const error = await addNoteAction(data);
 
+              setIsLoading(false);
               toast({
                 title: error ? "Error!" : "Success!",
                 description: error

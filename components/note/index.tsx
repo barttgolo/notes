@@ -1,5 +1,5 @@
-import { MarkAsDoneAlertDialog } from "@/components/list/note/mark-as-done-alert-dialog";
-import { RemoveAlertDialog } from "@/components/list/note/remove-alert-dialog";
+import { MarkAsDoneAlertDialog } from "@/components/note/mark-as-done-alert-dialog";
+import { RemoveAlertDialog } from "@/components/note/remove-alert-dialog";
 import {
   Card,
   CardHeader,

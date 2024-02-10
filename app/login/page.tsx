@@ -15,10 +15,12 @@ import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function Login() {
   const params = useSearchParams();
   const errorMessage = params.get("message");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { register, handleSubmit } = useForm<AuthSchema>({
     resolver: zodResolver(authSchema),
@@ -53,12 +55,24 @@ export default function Login() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <div className="flex gap-2">
-            <Button onClick={handleSubmit((data) => signInAction(data))}>
+            <Button
+              onClick={handleSubmit(async (data) => {
+                setIsLoading(true);
+                await signInAction(data);
+                setIsLoading(false);
+              })}
+              disabled={isLoading}
+            >
               Sign In
             </Button>
             <Button
               variant="outline"
-              onClick={handleSubmit((data) => signUpAction(data))}
+              onClick={handleSubmit(async (data) => {
+                setIsLoading(true);
+                await signUpAction(data);
+                setIsLoading(false);
+              })}
+              disabled={isLoading}
             >
               Sign Up
             </Button>

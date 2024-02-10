@@ -1,9 +1,6 @@
 "use client";
 
-import { completeNoteAction } from "@/app/actions";
-
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { deleteNoteAction } from "@/app/actions";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -14,29 +11,37 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2, Trash } from "lucide-react";
 import { useState } from "react";
 
 type Props = {
   id: string;
 };
 
-export const MarkAsDoneAlertDialog = ({ id }: Props) => {
+export const RemoveAlertDialog = ({ id }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   return (
     <AlertDialog open={open} onOpenChange={(open) => setOpen(open)}>
       <AlertDialogTrigger asChild>
-        <Button size="icon">
-          <Check className="h-4 w-4" />
+        <Button variant="destructive" size="icon">
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash className="h-4 w-4" />
+          )}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently mark this note as completed.
+            This action cannot be undone. This will permanently delete this
+            note.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -44,11 +49,13 @@ export const MarkAsDoneAlertDialog = ({ id }: Props) => {
           <Button
             onClick={async () => {
               setOpen(false);
-              const error = await completeNoteAction(id);
+              setIsLoading(true);
+              const error = await deleteNoteAction(id);
 
+              setIsLoading(false);
               toast({
                 title: error ? "Error!" : "Success!",
-                description: error ? error.message : "Note has been completed.",
+                description: error ? error.message : "Note has been deleted.",
               });
             }}
           >

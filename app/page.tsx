@@ -1,9 +1,10 @@
-import { AddNoteDialog } from "@/components/list/add-note-dialog";
-import { NavBar } from "@/components/list/nav-bar";
-import { Note } from "@/components/list/note";
+import { AddNoteDialog } from "@/components/add-note-dialog";
+import { NavBar } from "@/components/nav-bar";
+import { Note } from "@/components/note";
 import { createClient } from "@/utils/supabase/server";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cookies } from "next/headers";
+import { Loader2 } from "lucide-react";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -26,7 +27,7 @@ export default async function Index() {
   const completedNotes = data?.filter((note) => note.completed_at);
 
   return (
-    <div className="relative flex-1 w-full flex flex-col gap-4 items-center pb-16">
+    <div className="relative flex-1 w-full flex flex-col gap-4 items-center pb-16 lg:w-[512px] lg:mx-auto">
       <NavBar />
       <Tabs defaultValue="all" className="w-full px-4">
         <TabsList className="grid w-full grid-cols-3">
@@ -71,7 +72,6 @@ export default async function Index() {
           </div>
         </TabsContent>
       </Tabs>
-
       <div className="fixed bottom-4 left-4">
         <AddNoteDialog />
       </div>
