@@ -1,57 +1,80 @@
-import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
+import { AddNoteDialog } from "@/components/list/add-note-dialog";
+import { NavBar } from "@/components/list/nav-bar";
+import { Note } from "@/components/list/note";
 import { createClient } from "@/utils/supabase/server";
-import ConnectSupabaseSteps from "@/components/ConnectSupabaseSteps";
-import SignUpUserSteps from "@/components/SignUpUserSteps";
-import Header from "@/components/Header";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cookies } from "next/headers";
 
 export default async function Index() {
   const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
-    try {
-      createClient(cookieStore);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
+  const { data } = await supabase
+    .from("notes")
+    .select(
+      `created_by:profiles!notes_created_by_fkey(email),
+  completed_by:profiles!notes_completed_by_fkey(email),           
+  completed_at,
+  content,
+  created_at,
+  id`
+    )
+    .order("created_at", { ascending: false });
 
-  const isSupabaseConnected = canInitSupabaseClient();
+  const activeNotes = data?.filter((note) => !note.completed_at);
+
+  const completedNotes = data?.filter((note) => note.completed_at);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-        <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-          <DeployButton />
-          {isSupabaseConnected && <AuthButton />}
-        </div>
-      </nav>
+    <div className="relative flex-1 w-full flex flex-col gap-4 items-center pb-16">
+      <NavBar />
+      <Tabs defaultValue="all" className="w-full px-4">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+        </TabsList>
+        <TabsContent value="all">
+          <div className="flex flex-col gap-4">
+            {activeNotes?.map((note) => (
+              <Note key={note.id} note={note} />
+            ))}
 
-      <div className="animate-in flex-1 flex flex-col gap-20 opacity-0 max-w-4xl px-3">
-        <Header />
-        <main className="flex-1 flex flex-col gap-6">
-          <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          {isSupabaseConnected ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-        </main>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  completed
+                </span>
+              </div>
+            </div>
+
+            {completedNotes?.map((note) => (
+              <Note key={note.id} note={note} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="active">
+          <div className="flex flex-col gap-4">
+            {activeNotes?.map((note) => (
+              <Note key={note.id} note={note} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="completed">
+          <div className="flex flex-col gap-4">
+            {completedNotes?.map((note) => (
+              <Note key={note.id} note={note} />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="fixed bottom-4 left-4">
+        <AddNoteDialog />
       </div>
-
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
-        <p>
-          Powered by{" "}
-          <a
-            href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-            target="_blank"
-            className="font-bold hover:underline"
-            rel="noreferrer"
-          >
-            Supabase
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }

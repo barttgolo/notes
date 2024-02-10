@@ -13,6 +13,11 @@ export async function GET(request: Request) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     await supabase.auth.exchangeCodeForSession(code);
+    const { data } = await supabase.auth.getUser();
+
+    if (data) {
+      await supabase.from("profiles").insert({ email: data.user?.email });
+    }
   }
 
   // URL to redirect to after sign in process completes
