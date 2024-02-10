@@ -4,7 +4,6 @@ import { Note } from "@/components/note";
 import { createClient } from "@/utils/supabase/server";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cookies } from "next/headers";
-import { Loader2 } from "lucide-react";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -41,20 +40,23 @@ export default async function Index() {
               <Note key={note.id} note={note} />
             ))}
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t"></span>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  completed
-                </span>
-              </div>
-            </div>
-
-            {completedNotes?.map((note) => (
-              <Note key={note.id} note={note} />
-            ))}
+            {completedNotes?.length ? (
+              <>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t"></span>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      completed
+                    </span>
+                  </div>
+                </div>
+                {completedNotes?.map((note) => (
+                  <Note key={note.id} note={note} />
+                ))}
+              </>
+            ) : null}
           </div>
         </TabsContent>
         <TabsContent value="active">
