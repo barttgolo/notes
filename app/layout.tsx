@@ -9,7 +9,6 @@ const roboto = Roboto({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#colorHere",
   minimumScale: 1,
   initialScale: 1,
   maximumScale: 1,
