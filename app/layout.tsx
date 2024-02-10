@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Notes",
   description: "Notes app",
   generator: "Next.js",
-  manifest: "/manifest.json",
+  manifest: "/manifest.webmanifest",
   authors: [{ name: "@barttgolo" }],
   viewport:
     "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
