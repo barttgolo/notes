@@ -28,7 +28,7 @@ export default async function Index() {
   return (
     <div className="relative flex-1 w-full flex flex-col gap-4 items-center pb-16 lg:w-[512px] lg:mx-auto">
       <NavBar />
-      <Tabs defaultValue="all" className="w-full px-4">
+      <Tabs defaultValue="active" className="w-full px-4">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="all">All</TabsTrigger>
