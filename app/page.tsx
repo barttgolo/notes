@@ -30,11 +30,11 @@ export default async function Index() {
       <NavBar />
       <Tabs defaultValue="all" className="w-full px-4">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
-        <TabsContent value="all">
+        <TabsContent value="active">
           <div className="flex flex-col gap-4">
             {activeNotes?.map((note) => (
               <Note key={note.id} note={note} />
