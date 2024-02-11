@@ -39,6 +39,13 @@ export default async function Index() {
             {activeNotes?.map((note) => (
               <Note key={note.id} note={note} />
             ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="all">
+          <div className="flex flex-col gap-4">
+            {activeNotes?.map((note) => (
+              <Note key={note.id} note={note} />
+            ))}
 
             {completedNotes?.length ? (
               <>
@@ -57,13 +64,6 @@ export default async function Index() {
                 ))}
               </>
             ) : null}
-          </div>
-        </TabsContent>
-        <TabsContent value="active">
-          <div className="flex flex-col gap-4">
-            {activeNotes?.map((note) => (
-              <Note key={note.id} note={note} />
-            ))}
           </div>
         </TabsContent>
         <TabsContent value="completed">
